@@ -1,5 +1,4 @@
-#sum the numbers from 1 to 1000000
-
+import concurrent.futures
 import time
 from threading import *
 
@@ -25,9 +24,11 @@ def second_half(lock):
 lock = Lock()
 t1 = Thread(target=first_half, args=[lock])
 t2 = Thread(target=second_half, args=[lock])
-
+start = time.perf_counter()
 t1.start()
 t2.start()
 t1.join()
 t2.join()
+end = time.perf_counter()
 print(a)
+print(f"time consumed is {end-start} sec")
