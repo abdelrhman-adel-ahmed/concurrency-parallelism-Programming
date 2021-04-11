@@ -2,6 +2,7 @@ import time
 from threading import Thread
 
 #acquire and release overheads added by the GIL while doing cpu bound tasks will increase the time more than one threaded programme !! :(.
+#even if we use py 3.2 or higher version which removed the concept of ticks and add the concept of gil_drop_request
 
 
 COUNT = 50000000
