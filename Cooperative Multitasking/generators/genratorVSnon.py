@@ -15,7 +15,7 @@ def g():
         yield s
 
 
-#or use for loop it implicitly create an iterator and apply next each iteration and assign the return of the next to the loop var 
+#or use for loop, it implicitly create an iterator and apply next each iteration and assign the return of the next to the loop var 
 try:
     gen = g()
     while True:
