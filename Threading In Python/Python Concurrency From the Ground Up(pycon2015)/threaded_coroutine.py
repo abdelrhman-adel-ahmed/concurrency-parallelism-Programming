@@ -1,20 +1,34 @@
 from socket  import *
 from t1 import fib
 from collections import deque
+from queue import Queue
 from select import select
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 
 
 tasks=deque()
+
 recv_wait={} #mapping socket to tasks (generators)
 send_wait={}
 future_wait={}
 pool=ThreadPoolExecutor()
 future_notify,future_event=socketpair()
 
+"""
+the problem is we launch thread to calc the fib ,but if we call the result it will block 
+so the solution is to put yield but that will block all the programme because the select 
+work for fb, so when it yield we put the future in the future_wait and we add the done
+call back and then programme procced ,because the add_done_callback is the last thing in the 
+elif block so we will go back to our loop,we also add the future_monitor to the task first
+thing so its  waiting for recieving on future_event socket, and when the result is present and 
+thread is finished it will append the future to the tasks queue again so we when we call
+next on it we now can collect the result and it will not block because the result is present
+now
+"""
 def future_done(future):
-    tasks.append(future_wait[future])
+    tasks.append(future_wait.pop(future))
     future_notify.send(b'x')
 
 def future_monitor():
@@ -56,8 +70,11 @@ def fib_handler(client,addr):
 def run():
     #as long as any tasks any where 
     while any([tasks,recv_wait,send_wait]):
+        print(len(future_wait))
         while not tasks:
-            #while no active tasks to run then we wait for i/o(om socket)
+            #while no active tasks to run then we wait for i/o(on socket)'
+            #and then when it ready we have to put it back to the tasks to call
+            #next on it and get to to procced 
             can_rec,can_send,_ = select(recv_wait,send_wait,[])
             for t in can_rec:
                 tasks.append(recv_wait.pop(t))
@@ -67,9 +84,6 @@ def run():
         task=tasks.popleft()
         try:
             why ,what =next(task)
-            #we mainly have four tasks server task,client task,future task,future_event task
-            #server always get puted in the recv wait dict ,client can either be 
-            #in recv wait or send wait
             if why == 'recv':
                 #must go wait somewhere 
                 recv_wait[what]=task
