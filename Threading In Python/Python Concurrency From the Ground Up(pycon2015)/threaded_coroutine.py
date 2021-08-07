@@ -70,7 +70,6 @@ def fib_handler(client,addr):
 def run():
     #as long as any tasks any where 
     while any([tasks,recv_wait,send_wait]):
-        print(len(future_wait))
         while not tasks:
             #while no active tasks to run then we wait for i/o(on socket)'
             #and then when it ready we have to put it back to the tasks to call
