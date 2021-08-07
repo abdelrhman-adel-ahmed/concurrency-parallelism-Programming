@@ -72,8 +72,8 @@ def run():
     while any([tasks,recv_wait,send_wait]):
         while not tasks:
             #while no active tasks to run then we wait for i/o(on socket)'
-            #and then when it ready we have to put it back to the tasks to call
-            #next on it and get to to procced 
+            #and then when it ready it return the socket that is ready 
+            #so now we have to put it back to the tasks to call next on it and get to to procced 
             can_rec,can_send,_ = select(recv_wait,send_wait,[])
             for t in can_rec:
                 tasks.append(recv_wait.pop(t))
