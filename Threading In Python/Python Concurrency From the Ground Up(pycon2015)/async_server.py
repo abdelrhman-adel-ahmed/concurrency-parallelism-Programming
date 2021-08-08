@@ -1,6 +1,4 @@
-# server.py
-# Fib microservice
-
+from fib import fib
 from socket import *
 from t1 import fib
 from collections import deque
