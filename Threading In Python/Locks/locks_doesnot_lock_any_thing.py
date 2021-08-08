@@ -43,8 +43,9 @@ def sumTwo():
     num = num / 2
 
     lock.release()
-    print('sum two relased the lock') #so when sumone continue it will throw an error when it try to relase the lock
-   
+    print('sum two relased the lock') 
+    #it can realse it neverless its not the one that aquire it ,not like rlock which only can be released by the thread that acquire it 
+    #so when sumone thread continue it will throw an error when it try to relase the lock   
 
   
 # calling the functions
