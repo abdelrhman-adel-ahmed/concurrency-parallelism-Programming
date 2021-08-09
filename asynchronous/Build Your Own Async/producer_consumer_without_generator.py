@@ -77,7 +77,7 @@ def producer(q,count):
             #q.put(None)
             q.close() #no more item will been produced
     _run(0)
-
+   #or use this instead if nested functions
 # def producer(q,count,n=0):
 #     if n < count:
 #         print('produce',n)
@@ -105,14 +105,19 @@ s.run()
 #     s.call_soon(func)
 # s.run()
 
+
 """
-                   the problem of message after close()
+briefly : if you lazy as fuck and you will not read all of this :
+(problem is we need to fiqure away to endicate ending of the commnication ,i see you ,you thinking about sentinel value ,if you did this is not for you, xoxo )
+                                       the problem of message after close()
 when we call_soon on producer the consumer will get the closing message on this setup 
 if we call call_later on the producer what happend is :
 1- we call_soon first time to put the producer in the tasks sched
 2- call_soon first time put the consumer in the tasks sched 
 3- run take the fist taks (producer) call it hit the _run(0) it 
  1- call the put method to put the item in the queue 
+ 3- (check if there any waiting to get value) --> main part of the whole thing 
+    because when we close we dont check even if there is something in the waiting list
  2- return and then call the call_later to put the producer on the waiting 
  3- now the only task we have in the tasks queue is the consumer 
 4- run then get the consumer and run it it q.get get called and we have item so we call 
