@@ -77,7 +77,7 @@ def producer(q,count):
             #q.put(None)
             q.close() #no more item will been produced
     _run(0)
-   #or use this instead if nested functions
+   #or use this instead of nested functions
 # def producer(q,count,n=0):
 #     if n < count:
 #         print('produce',n)
