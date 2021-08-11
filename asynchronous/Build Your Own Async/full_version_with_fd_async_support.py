@@ -28,11 +28,13 @@ class Scheduler():
     def write_wait(self,fd,func):
         self._write_waiting[fd]=func
 
+
     def run(self):
         while any([self.tasks,self.sleeping,self._read_waiting,self._write_waiting]):
             if not self.tasks:
                 if self.sleeping:
-                    deadline,_,func=heapq.heappop(self.sleeping)
+                    deadline,seq,func=heapq.heappop(self.sleeping)
+                    heapq.heappush(self.sleeping, (deadline,seq,func))        
                     timeout=deadline-time.time()
                     if timeout < 0: #if the task already finish sleeping
                         timeout=0
@@ -50,16 +52,15 @@ class Scheduler():
                 now =time.time()
                 while self.sleeping:
                     if now > self.sleeping[0][0]:
-                        print('enterd')
                         self.tasks.append(heapq.heappop(self.sleeping)[2])
                     else:
                         break
-                self.tasks.append(func)
+                
+                #self.tasks.append(func)  #--> wrong (will append the last coro again despite its already finshed)
 
             while self.tasks:
                 func=self.tasks.popleft()
                 func() 
-
     def new_task(self,coro):
         self.tasks.append(Task(coro)) 
 
@@ -96,7 +97,7 @@ class Task:
             self.coro.send(None)
             if sched.current:
                 sched.tasks.append(self)
-        except  StopIteration:
+        except StopIteration:
             pass
 
 class Queueclosed(Exception):
@@ -182,10 +183,11 @@ async def server(address):
 
 async def echo_handler(client):
     while True:
-        data= await sched.recv(client,1000)
-        if not data:
+        try:
+            data= await sched.recv(client,1000)
+            await sched.send(client,b'got '+ data)
+        except ConnectionResetError:
             break
-        await sched.send(client,b'got '+ data)
     print('connection closed')
 
 
