@@ -108,7 +108,7 @@ s.run()
 
 """
 briefly : if you lazy as fuck and you will not read all of this :
-(problem is we need to fiqure away to endicate ending of the commnication ,i see you ,you thinking about sentinel value ,if you did this is not for you, xoxo )
+(problem is we need to find a away to endicate ending of the commnication ,i see you ,you thinking about sentinel value ,if you did this is not for you, xoxo )
                                        the problem of message after close()
 when we call_soon on producer the consumer will get the closing message on this setup 
 if we call call_later on the producer what happend is :
