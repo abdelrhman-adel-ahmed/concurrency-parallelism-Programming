@@ -56,7 +56,7 @@ class Scheduler():
                     else:
                         break
                 
-                #self.tasks.append(func)  #--> wrong (will append the last coro again despite its already finshed)
+                #self.tasks.append(func)  #--> wrong (will append the last finished task again despite its already finshed0)
 
             while self.tasks:
                 func=self.tasks.popleft()
