@@ -22,11 +22,11 @@ def thread2():
         with cv:
             print("oh shit iam about to call wait and hope the notifer didnot finish yet")
             cv.wait()
-            print("fucking yaaah i get notifed finally")
+            print("yaaah i get notifed finally")
 
 
 """
-note:that here we check for the start var fist and then try to grap the lock.
+note:that here we check for the state var first and then try to grap the lock.
 the problem if we dont have a lock is the notify function can be called first before
 wait and then it return because no waiting are here ,and then now we retrurn from the 
 spining lock (acquire block and spin untill the state in unlock) and wait get called and it blocked
