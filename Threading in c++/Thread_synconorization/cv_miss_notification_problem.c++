@@ -11,6 +11,8 @@ condition_variable cv;
 void thread1()
 {
     std::unique_lock<std::mutex> lck(mtx);
+    //actually here in c++ we can even not sleep because thread are running at the same time "hopfullt" so notifer have higher change 
+    //to run first and acquire the lock preventing thread2 from wait and then notify and thread2 miss the notification and stuck waiting for ever
     this_thread::sleep_for(chrono::seconds(2));
     state = 1;
     cv.notify_one();
