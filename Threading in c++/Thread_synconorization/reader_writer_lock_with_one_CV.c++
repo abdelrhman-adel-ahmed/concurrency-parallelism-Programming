@@ -10,6 +10,24 @@ using namespace std;
 using namespace std::chrono;
 
 
+/*
+            problems:
+1- 
+scince we using single cv ,we wakes up all waiters and if we have many waiter that will wake up all of them and it wastful because they will fail to acquire the lock except one 
+of course if it even grap the lock before a reader come and grap it.
+solution:is to use diffrent lock for waiters and readers 
+
+2-starvation ,we can have to many readers that writers will starve ,or we have many writers that successfully grap the lock one after the other and the readers starve 
+solution:to solve this we may introduce ticket algorithm like the one i used in python example ,so each thread have a ticket and turn ,and each time one thread try to read we compare
+the ticket that generated to that thread with the balance factor that we have e.x we will allow only 3 readers if there writer wait then the writer come 
+but here another problem that may be the writer will take long time and cause contention 
+
+3-Locks aren't dealt out in the order they are requested
+solution:to solve this we may introduce writer cv for each writer and then put them in a queue and deal with them one by one in the order they came
+
+i will solve one problem after the other in the next few days ,hope you enjoy reading this .
+*/
+
 volatile long long shared = 0;
 mutex mtx;
 condition_variable cv;
