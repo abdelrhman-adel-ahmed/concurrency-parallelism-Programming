@@ -22,6 +22,8 @@ public:
         {
             count ++ ;
             //cout << this_thread::get_id() <<state << endl;
+            //The problem with yield is that it has no clear semantics: the kernel has *no* idea what you are waiting for, so it has to guess when to wake you up.4
+            //In a word, "yield()" is always a hack.
             this_thread::yield();
      
         }
