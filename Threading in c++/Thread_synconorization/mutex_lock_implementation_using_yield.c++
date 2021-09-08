@@ -24,6 +24,10 @@ public:
             //cout << this_thread::get_id() <<state << endl;
             //The problem with yield is that it has no clear semantics: the kernel has *no* idea what you are waiting for, so it has to guess when to wake you up.4
             //In a word, "yield()" is always a hack.
+            //normally what happen is the os take control and send the thread to the end of the runnnig queue of the same scheduling priorty
+            //so it may actually run continue running any way 
+            //solution is to use park unpark or equivalent sys call that put the thread in bloking state and push that in a quque and when we release the lock
+            //we check if there any thread in that quque and if there we pop one and unpark it (make it runnable again)
             this_thread::yield();
      
         }
